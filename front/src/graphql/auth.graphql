@@ -1,0 +1,24 @@
+mutation SignIn($username: String!, $password: String!) {
+  signIn(username: $username, password: $password) {
+    code
+    success
+    message
+    token
+    user {
+      id
+      username
+    }
+  }
+}
+
+mutation CreateUser($username: String!, $password: String!) {
+  createUser(username: $username, password: $password) {
+    code
+    success
+    message
+    user {
+      id
+      username
+    }
+  }
+}
