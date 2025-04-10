@@ -235,7 +235,7 @@ export type DeleteArticleMutation = { __typename?: 'Mutation', deleteArticle: { 
 export type GetArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetArticlesQuery = { __typename?: 'Query', getArticles?: Array<{ __typename?: 'Article', id: string, image: string, content: string, user?: { __typename?: 'User', id: string, username: string } | null, likes?: Array<{ __typename?: 'Like', id: string } | null> | null } | null> | null };
+export type GetArticlesQuery = { __typename?: 'Query', getArticles?: Array<{ __typename?: 'Article', id: string, image: string, content: string, user?: { __typename?: 'User', id: string, username: string } | null, likes?: Array<{ __typename?: 'Like', id: string } | null> | null, comments?: Array<{ __typename?: 'Comment', id: string, content: string } | null> | null } | null> | null };
 
 export type GetCommentsByArticleQueryVariables = Exact<{
   articleId: Scalars['ID']['input'];
@@ -421,6 +421,10 @@ export const GetArticlesDocument = gql`
     }
     likes {
       id
+    }
+    comments {
+      id
+      content
     }
   }
 }

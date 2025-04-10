@@ -33,11 +33,27 @@ const Details: React.FC = ( ) => {
     const [newComment, setNewComment] = useState('');
     const {data, refetch} = useGetArticlesQuery();
     const [manageLike] = useManageLikeMutation()
-    const [manageComment] = useCreateCommentMutation()
+    const [manageComment] = useCreateCommentMutation({
+        onCompleted : async (data) => {
+            if(data?.createComment?.success){
+                await refetchDetails()
+                toaster.create({
+                    description: "Commentaire Ajouté",
+                    type: "success",
+                })
+            }else{
+                toaster.create({
+                    description: "Une erreur c'est produite lors de l'ajout du commentaire",
+                    type: "error",
+                })
+            }
+        }
+    })
 
     useEffect(()=> {
         const getDetails = () : void=> {
             const article : Article | undefined | null = data?.getArticles?.find((e) =>e?.id === id);
+            console.log(article)
             setArticleDetails(article as Article);
             setLikes(article?.likes as Like[]);
             setComments(article?.comments as Comment[]);
@@ -48,6 +64,7 @@ const Details: React.FC = ( ) => {
     const refetchDetails = async () : Promise<void> => {
         const { data: newData } = await refetch();
         const article : Article | undefined | null = newData?.getArticles?.find((e) => e?.id === id);
+        console.log(article)
         setArticleDetails(article as Article);
         setLikes(article?.likes as Like[]);
         setComments(article?.comments as Comment[]);
@@ -57,7 +74,6 @@ const Details: React.FC = ( ) => {
         const result  = await manageLike({
             variables : {articleId : id},
         })
-        console.log(result)
         if(result.data?.manageLike?.success){
             await refetchDetails()
             toaster.create({
@@ -129,7 +145,6 @@ const Details: React.FC = ( ) => {
                             </Button>
                         </HStack>
                     </VStack>
-                    );
                 </Box>
             </div>
         </>
