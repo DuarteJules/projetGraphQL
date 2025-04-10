@@ -4,7 +4,8 @@ import { resolvers } from "./resolvers.js";
 import { typeDefs } from "./schema.js";
 import db from "./datasources/db.js";
 import { getUser } from "./modules/auth.js";
-
+import dotenv from "dotenv";
+dotenv.config();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
