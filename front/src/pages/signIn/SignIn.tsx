@@ -1,5 +1,4 @@
 import './signIn.css'
-import userStore from "@/utils/store.ts";
 import React, { useState, ChangeEvent } from "react";
 import {
     Box,
@@ -12,8 +11,8 @@ import {
 } from "@chakra-ui/react";
 import { toaster } from "@/components/ui/toaster"
 import { useSignInMutation, useCreateUserMutation } from "@/graphql/generated.tsx";
-import { User as UserType } from '../../utils/storeInterface.ts'
 import { NavigateFunction, useNavigate } from "react-router";
+import { useAuth } from "@/context/Auth.tsx";
 
 interface LoginData {
     username: string;
@@ -28,15 +27,31 @@ type TabsIds = "Connexion" | "Inscription";
 
 
 const SignIn: React.FC = () => {
-    const updateUser : (user : UserType | null) => void =  userStore(state => state.updateUser);
-    const updateToken : (token : string | null) => void =  userStore(state => state.updateToken);
     const [createUser] = useCreateUserMutation();
-    const [signIn] = useSignInMutation();
     const navigate : NavigateFunction = useNavigate();
+    const { login } = useAuth();
 
     const [loginData, setLoginData] = useState<LoginData>({ username: "", password: "" });
     const [registerData, setRegisterData] = useState<RegisterData>({ username: "", password: "" });
     const [tabId, setTabId] = useState<TabsIds>("Connexion");
+
+    const [signIn] = useSignInMutation({
+        onCompleted: (data) => {
+            if (data.signIn.success && data.signIn.token && data.signIn.user) {
+                login(data.signIn.token, data.signIn.user.id, data.signIn.user.username);
+                toaster.create({
+                    description: "Connexion réussie",
+                    type: "success",
+                })
+                navigate('/');
+            }else{
+                toaster.create({
+                    description: "Une erreur c'est produite",
+                    type: "error",
+                })
+            }
+        }
+    });
 
     const handleLoginChange = (e: ChangeEvent<HTMLInputElement>) => {
         setLoginData({ ...loginData, [e.target.name]: e.target.value });
@@ -48,29 +63,12 @@ const SignIn: React.FC = () => {
     };
 
     const handleLogin = async (): Promise<void> => {
-        const result = await signIn({
+        await signIn({
             variables : {
                 username : loginData.username,
                 password: loginData.password,
             }
         })
-        if(result?.data?.signIn?.success){
-            toaster.create({
-                description: "Connexion réussie",
-                type: "success",
-            })
-            console.log(result?.data?.signIn?.user)
-            console.log(result?.data?.signIn?.token)
-            updateUser(result?.data?.signIn?.user as UserType | null)
-            updateToken(result?.data?.signIn?.token as string | null)
-            navigate("/")
-        }else {
-            console.log(result?.data?.signIn?.message)
-            toaster.create({
-                description: "Une erreur c'est produite",
-                type: "error",
-            })
-        }
     };
 
     const handleRegister = async (): Promise<void> => {
@@ -92,8 +90,6 @@ const SignIn: React.FC = () => {
                 type: "error",
             })
         }
-        console.log(result)
-        // Appelle API ici
     };
 
     return (

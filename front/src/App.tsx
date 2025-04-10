@@ -4,8 +4,9 @@ import React from "react";
 import Home from "./pages/Home/Home.tsx";
 import Header from "./components/header/Header";
 import SignIn from "@/pages/signIn/SignIn.tsx";
-import { Toaster } from "@/components/ui/toaster.tsx";
+import Details from "@/pages/details/Details.tsx";
 
+import { Toaster } from "@/components/ui/toaster.tsx";
 
 const App: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signIn" element={<SignIn />} />
+        <Route path="/details/:id" element={<Details />} />
       </Routes>
         <Toaster/>
     </Router>

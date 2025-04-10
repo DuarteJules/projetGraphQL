@@ -1,16 +1,13 @@
 // store.js
-import { create } from 'zustand'
-import { userStoreType, User } from "@/utils/storeInterface.ts";
+export interface User {
+   id : string;
+   username : string;
+}
 
-export const userStore  = create<userStoreType>((set) => ({
-   user: null,
-   updateUser: (user: User | null) => {
-     set({ user })
-   },
-   token : null,
-   updateToken: (token: string | null) => {
-      set({ token })
-   },
-}))
+export const storeUser = (user : User): void => {
+   localStorage.setItem('user', JSON.stringify(user))
+}
 
-export default userStore;
+export const storeToken = (token : string): void => {
+   localStorage.setItem('token', JSON.stringify(token))
+}
