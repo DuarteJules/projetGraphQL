@@ -4,23 +4,19 @@ import { Provider } from "./components/ui/provider.tsx";
 import "./index.css";
 import App from "./App.tsx";
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client";
-import userStore from "@/utils/store.ts";
 import { setContext } from "@apollo/client/link/context";
+import { AuthProvider, useAuth } from "@/context/Auth.tsx";
 
 const httpLink = createHttpLink({
     uri: 'http://localhost:4000/',
 });
-interface UserType {
-    id: number;
-    username: string;
-}
 
 const ApolloClientWithAuth = () => {
-    const user : UserType | null = userStore(state => state.user);
+    const { isAuthenticated } = useAuth();
 
     const authLink = setContext((_, { headers }) => {
         const token = localStorage.getItem('authToken');
-        if (user && token) {
+        if (isAuthenticated && token) {
             return {
                 headers: {
                     ...headers,
@@ -45,10 +41,11 @@ const ApolloClientWithAuth = () => {
                     <App />
                 </Provider>
             </StrictMode>
-    </ApolloProvider>
+        </ApolloProvider>
     )
 };
-
 createRoot(document.getElementById("root")!).render(
-<ApolloClientWithAuth/>
+    <AuthProvider>
+        <ApolloClientWithAuth />
+    </AuthProvider>
 );

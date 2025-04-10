@@ -1,31 +1,26 @@
 import "./header.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { House, User } from "lucide-react";
-import userStore from "@/utils/store.ts";
-
-interface UserType {
-    id: string;
-    username: string;
-}
+import { useAuth } from "@/context/Auth.tsx";
 
 const Header: React.FC = () => {
-    const user : UserType | null = userStore(state => state.user);
-    const updateUser : (user : UserType | null) => void =  userStore(state => state.updateUser);
-    const updateToken : (token : string | null) => void =  userStore(state => state.updateToken);
+    const { isAuthenticated } = useAuth();
 
-    interface UserIconProps {
-        user: UserType | null
-    }
+    const [isLogged , setIsLogged] = useState(isAuthenticated);
 
-    const UserIcon: React.FC<UserIconProps>  = ({user}) => {
-        if(user){
+    useEffect(() => {
+        setIsLogged(isAuthenticated);
+    },[isAuthenticated]);
+
+    const UserIcon: React.FC = () => {
+        if(isLogged){
             return(
                 <>
-                    <div onClick={() => {updateUser(null); updateToken(null);}} className="connect">
+                    <Link to='/' onClick={() => {localStorage.removeItem('token'); localStorage.removeItem('user')}} className="connect">
                         <p>Disconnect</p>
                         <User size={40} strokeWidth={1.25} />
-                    </div>
+                    </Link>
                 </>
             )
         }else {
@@ -45,7 +40,7 @@ const Header: React.FC = () => {
           <Link to="/" className="logo">
               <House size={40} strokeWidth={1.25} color={"wheat"} />
           </Link>
-          <UserIcon user={user} ></UserIcon>
+          <UserIcon ></UserIcon>
       </div>
     </>
   );
