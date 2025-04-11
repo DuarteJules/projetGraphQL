@@ -1,0 +1,25 @@
+.headerDiv {
+  width: 100%;
+  background-color: #242424;
+  border-radius: 0.2em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-width: 1px;
+  box-shadow: var(--chakra-shadows-md);
+}
+
+.logo{
+  padding: 0.45rem;
+}
+
+.connect{
+  display: flex;
+  color: wheat;
+  align-items: center;
+  text-decoration: none;
+}
+
+.connect:hover{
+  color: wheat;
+}

@@ -1,0 +1,102 @@
+mutation CreateArticle($image: String!, $content: String!) {
+  createArticle(image: $image, content: $content) {
+    code
+    success
+    message
+    article {
+      id
+      image
+      content
+    }
+  }
+}
+
+mutation UpdateArticle($id: ID!, $image: String, $content: String) {
+  updateArticle(id: $id, image: $image, content: $content) {
+    code
+    success
+    message
+    article {
+      id
+      image
+      content
+    }
+  }
+}
+
+mutation DeleteArticle($id: ID!) {
+  deleteArticle(id: $id) {
+    code
+    success
+    message
+  }
+}
+
+query GetArticles {
+  getArticles {
+    id
+    image
+    content
+    user {
+      id
+      username
+    }
+    likes {
+      id
+    }
+    comments{
+      id
+      content
+    }
+  }
+}
+
+query GetCommentsByArticle($articleId: ID!) {
+  getCommentsByArticle(articleId: $articleId) {
+    id
+    content
+    user {
+      username
+    }
+    article {
+      image
+      content
+    }
+  }
+}
+
+
+mutation CreateComment($articleId: ID!, $content: String!) {
+  createComment(articleId: $articleId, content: $content) {
+    code
+    success
+    message
+    comment {
+      id
+    }
+  }
+}
+
+mutation DeleteComment($deleteCommentId: ID!) {
+  deleteComment(id: $deleteCommentId) {
+    code
+    success
+    message
+  }
+}
+
+mutation UpdateComment($updateCommentId: ID!, $content: String!) {
+  updateComment(id: $updateCommentId, content: $content) {
+    code
+    success
+    message
+  }
+}
+
+mutation ManageLike($articleId: ID!) {
+  manageLike(articleId: $articleId) {
+    code
+    success
+    message
+  }
+}
