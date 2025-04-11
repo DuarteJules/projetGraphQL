@@ -1,6 +1,6 @@
 # Mon Projet GraphQL
 
-Ce projet est une application frontend construite avec react, graphQl, codegen et Chakra Ui.
+Ce projet est une application backend construite avec apollo, prisma, graphQl et codegen.
 
 ## Prérequis
 
